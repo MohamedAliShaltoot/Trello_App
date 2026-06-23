@@ -1,6 +1,5 @@
 package com.example.trello
 
-
 import com.example.trello.data.local.dao.BoardDao
 import com.example.trello.data.local.dao.CardDao
 import com.example.trello.data.local.dao.CardListDao
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/** A list paired with its current cards - what the UI actually wants to render per column. */
 data class ListWithCards(
     val list: CardListEntity,
     val cards: List<CardEntity>
@@ -26,50 +24,47 @@ class TrelloRepository @Inject constructor(
     private val listDao: CardListDao,
     private val cardDao: CardDao
 ) {
+
+
     fun getBoards(): Flow<List<BoardEntity>> = boardDao.getAllBoards()
 
     suspend fun createBoard(title: String): Long =
         boardDao.insertBoard(BoardEntity(title = title))
 
-    /**
-     * Streams every list on a board, each paired with its own live card list.
-     * Re-emits automatically whenever lists OR any card in any of those lists changes,
-     * because flatMapLatest restarts the inner combine() if the set of lists changes.
-     */
     fun getBoardContents(boardId: Long): Flow<List<ListWithCards>> =
         listDao.getListsForBoard(boardId).flatMapLatest { lists ->
             if (lists.isEmpty()) {
                 flowOf(emptyList())
             } else {
-                val cardFlowsPerList = lists.map { list -> cardDao.getCardsForList(list.id) }
-                combine(cardFlowsPerList) { cardArrays ->
-                    lists.mapIndexed { index, list -> ListWithCards(list, cardArrays[index]) }
+                combine(lists.map { cardDao.getCardsForList(it.id) }) { cardArrays ->
+                    lists.mapIndexed { i, list -> ListWithCards(list, cardArrays[i]) }
                 }
             }
         }
 
     suspend fun createList(boardId: Long, title: String) {
-        val nextPosition = (listDao.getMaxPosition(boardId) ?: 0.0) + 1.0
-        listDao.insertList(
-            CardListEntity(
-                boardId = boardId,
-                title = title,
-                position = nextPosition
-            )
-        )
+        val nextPos = (listDao.getMaxPosition(boardId) ?: 0.0) + 1.0
+        listDao.insertList(CardListEntity(boardId = boardId, title = title, position = nextPos))
     }
+
+    suspend fun deleteList(list: CardListEntity) = listDao.deleteList(list)
 
     suspend fun createCard(listId: Long, title: String) {
-        val nextPosition = (cardDao.getMaxPosition(listId) ?: 0.0) + 1.0
-        cardDao.insertCard(CardEntity(listId = listId, title = title, position = nextPosition))
+        val nextPos = (cardDao.getMaxPosition(listId) ?: 0.0) + 1.0
+        cardDao.insertCard(CardEntity(listId = listId, title = title, position = nextPos))
     }
+    fun getCardById(cardId: Long): Flow<CardEntity?> = cardDao.getCardById(cardId)
 
-    /** Used by the drag-and-drop gesture handler once you wire that up. */
-    suspend fun moveCard(card: CardEntity, newListId: Long, newPosition: Double) {
-        cardDao.updateCard(card.copy(listId = newListId, position = newPosition))
+    suspend fun updateCardDetails(card: CardEntity, newTitle: String, newDescription: String) {
+        cardDao.updateCard(card.copy(title = newTitle, description = newDescription))
     }
 
     suspend fun deleteCard(card: CardEntity) = cardDao.deleteCard(card)
 
-    suspend fun deleteList(list: CardListEntity) = listDao.deleteList(list)
+    suspend fun getMaxPositionInList(listId: Long): Double =
+        cardDao.getMaxPosition(listId) ?: 0.0
+
+    suspend fun moveCard(card: CardEntity, newListId: Long, newPosition: Double) {
+        cardDao.updateCard(card.copy(listId = newListId, position = newPosition))
+    }
 }

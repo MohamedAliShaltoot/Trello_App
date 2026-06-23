@@ -1,7 +1,5 @@
 package com.example.trello
 
-
-
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.trello.data.local.dao.BoardDao
