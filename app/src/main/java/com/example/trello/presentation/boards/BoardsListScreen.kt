@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.trello.presentation.common.components.BoardEditorDialog
 import com.example.trello.presentation.common.components.BoardListItem
+import com.example.trello.presentation.navigation.SharedColor
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -82,8 +83,9 @@ fun BoardsListScreen(
         topBar = { TopAppBar(title = { Text("Your Boards") }) },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                text = { Text("New board") },
-                icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                containerColor = SharedColor.sharedColor,
+                text = { Text("New board" , color = Color.White) },
+                icon = { Icon(Icons.Default.Add, contentDescription = null, tint = Color.White) },
                 onClick = { viewModel.onIntent(BoardsListContract.Intent.OnCreateBoardClicked) },
                 shape = RoundedCornerShape(8.dp),
             )

@@ -9,12 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
@@ -54,7 +55,7 @@ fun CardDetailScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 CardDetailContract.Effect.NavigateBack -> onNavigateBack()
-                is CardDetailContract.Effect.ShowMessage -> Unit // surfaced via snackbar if needed later
+                is CardDetailContract.Effect.ShowMessage -> Unit
             }
         }
     }
@@ -107,7 +108,7 @@ fun CardDetailScreen(
                     )
                 }
                 Text(
-                    text = if (state.isCompleted) "Completed" else "Mark as complete",
+                    text = if (state.isCompleted) "Completed" else "Mark as complete?",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -149,7 +150,7 @@ fun CardDetailScreen(
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 AssistChip(
                     onClick = { viewModel.onIntent(CardDetailContract.Intent.OnDueDateClicked) },
-                    leadingIcon = { Icon(Icons.Default.MoreVert, contentDescription = null) },
+                    leadingIcon = { Icon(Icons.Default.DateRange, contentDescription = null) },
                     label = { Text(state.dueDate?.let { formatDueDate(it) } ?: "Set due date") }
                 )
                 if (state.dueDate != null) {
@@ -162,13 +163,14 @@ fun CardDetailScreen(
             Spacer(modifier = Modifier.height(28.dp))
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedButton(onClick = onNavigateBack, modifier = Modifier.weight(1f)) {
+                OutlinedButton(onClick = onNavigateBack, modifier = Modifier.weight(1f), shape = RoundedCornerShape(8.dp)) {
                     Text("Cancel")
                 }
                 Button(
                     onClick = { viewModel.onIntent(CardDetailContract.Intent.OnSaveClicked) },
                     enabled = state.canSave,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Save changes")
                 }

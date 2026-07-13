@@ -25,7 +25,6 @@ fun Priority.color(): Color = when (this) {
     Priority.NONE -> PriorityNone
 }
 
-/** Small read-only pill shown on a card, e.g. "High". Hidden for NONE. */
 @Composable
 fun PriorityChip(priority: Priority, modifier: Modifier = Modifier) {
     if (priority == Priority.NONE) return
@@ -42,7 +41,6 @@ fun PriorityChip(priority: Priority, modifier: Modifier = Modifier) {
     }
 }
 
-/** Row of tappable chips used to pick a priority in the card editor. */
 @Composable
 fun PrioritySelector(
     selected: Priority,

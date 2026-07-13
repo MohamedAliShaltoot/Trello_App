@@ -17,13 +17,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-// Shared with the rest of the dialog family so every AlertDialog in the app
-// reads as one deliberate shape language rather than mismatched defaults.
 private val DialogShape = RoundedCornerShape(20.dp)
 private val FieldShape = RoundedCornerShape(16.dp)
 private val ButtonShape = RoundedCornerShape(8.dp)
 
-/** Simple single-field text input dialog, used for "new list" / "new card". */
 @Composable
 fun InputDialog(
     title: String,
@@ -66,7 +63,6 @@ fun InputDialog(
     )
 }
 
-/** Generic "are you sure?" destructive-action confirmation dialog. */
 @Composable
 fun ConfirmDialog(
     title: String,
@@ -90,10 +86,7 @@ fun ConfirmDialog(
                 },
                 shape = ButtonShape,
                 colors = ButtonDefaults.buttonColors(Color.Red)
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = MaterialTheme.colorScheme.error,
-//                    contentColor = MaterialTheme.colorScheme.onError
-//                )
+
             ) { Text(confirmLabel,color = Color.White) }
         },
         dismissButton = {

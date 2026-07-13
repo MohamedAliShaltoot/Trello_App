@@ -1,16 +1,19 @@
 package com.example.trello.presentation.navigation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -19,7 +22,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.trello.R
 import com.example.trello.presentation.board.BoardScreen
 import com.example.trello.presentation.boards.BoardsListScreen
 import com.example.trello.presentation.carddetail.CardDetailScreen
@@ -27,12 +29,16 @@ import com.example.trello.presentation.favorites.FavoritesScreen
 
 
 private val topLevelRoutes = setOf(NavDestination.BoardsList.route, NavDestination.Favorites.route)
+object SharedColor {
+    val sharedColor = Color(0xFF4772A6)
+}
 
 @Composable
 fun TrelloNavGraph() {
     val navController = rememberNavController()
     val currentRoute by navController.currentBackStackEntryAsState()
     val showBottomBar = currentRoute?.destination?.route in topLevelRoutes
+
 
     Scaffold(
         bottomBar = {
@@ -98,25 +104,40 @@ fun TrelloNavGraph() {
 private fun TrelloBottomBar(navController: NavHostController, currentRoute: String?) {
     NavigationBar {
         NavigationBarItem(
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = SharedColor.sharedColor,
+                selectedIconColor = Color.White,
+                unselectedIconColor = Color.Gray,
+                selectedTextColor = SharedColor.sharedColor,
+                unselectedTextColor = Color.Gray
+            ),
             selected = currentRoute == NavDestination.BoardsList.route,
             onClick = { navController.navigateToTab(NavDestination.BoardsList.route) },
-            icon = { Image(
-                painterResource(id= R.drawable.dashboard),
-                contentDescription = null,
-
-            ) },
-            label = { Text("Boards",color = if(currentRoute == NavDestination.BoardsList.route) Color.Black else Color.Gray) }
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Dashboard,
+                    contentDescription = "Boards"
+                )
+            },
+            label = { Text("Boards") }
         )
         NavigationBarItem(
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = SharedColor.sharedColor,
+                selectedIconColor = Color.White,
+                unselectedIconColor = Color.Gray,
+                selectedTextColor = SharedColor.sharedColor,
+                unselectedTextColor = Color.Gray
+            ),
             selected = currentRoute == NavDestination.Favorites.route,
             onClick = { navController.navigateToTab(NavDestination.Favorites.route) },
-
-            icon = { Image(
-                painterResource(id= R.drawable.favorite),
-                contentDescription = null,
-
-                ) },
-            label = { Text("Favorites" ,color = if(currentRoute == NavDestination.Favorites.route) Color.Black else Color.Gray) }
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = "Favorite boards"
+                )
+            },
+            label = { Text("Favorites") }
         )
     }
 }

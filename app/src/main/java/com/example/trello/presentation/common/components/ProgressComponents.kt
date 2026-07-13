@@ -11,7 +11,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-/** Thin rounded progress bar used on board rows to show completion %. */
 @Composable
 fun BoardProgressBar(progress: Float, accentColor: Color, modifier: Modifier = Modifier) {
     LinearProgressIndicator(
