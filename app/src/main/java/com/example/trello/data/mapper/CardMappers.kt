@@ -1,0 +1,29 @@
+package com.example.trello.data.mapper
+
+import com.example.trello.data.local.entity.CardEntity
+import com.example.trello.domain.model.Card
+import com.example.trello.domain.model.Priority
+
+fun CardEntity.toDomain(): Card = Card(
+    id = id,
+    listId = listId,
+    title = title,
+    description = description,
+    position = position,
+    priority = Priority.fromNameOrDefault(priority),
+    dueDate = dueDate,
+    isCompleted = isCompleted,
+    createdAt = createdAt
+)
+
+fun Card.toEntity(): CardEntity = CardEntity(
+    id = id,
+    listId = listId,
+    title = title,
+    description = description,
+    position = position,
+    priority = priority.name,
+    dueDate = dueDate,
+    isCompleted = isCompleted,
+    createdAt = createdAt
+)
