@@ -31,6 +31,7 @@ object BoardsListContract {
     sealed interface Effect {
         data class NavigateToBoard(val boardId: Long) : Effect
         data class ShowUndoSnackbar(val message: String) : Effect
+        data class ShowAddedSnackbar(val message: String) : Effect
         data class ShowMessage(val message: String) : Effect
     }
 }

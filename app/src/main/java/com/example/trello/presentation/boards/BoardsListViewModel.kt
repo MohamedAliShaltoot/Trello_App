@@ -77,6 +77,7 @@ class BoardsListViewModel @Inject constructor(
 
             is Intent.OnToggleFavorite -> viewModelScope.launch {
                 repository.setBoardFavorite(intent.board.id, !intent.board.isFavorite)
+                _effect.send(Effect.ShowAddedSnackbar("Board \"${intent.board.title}\" Added to Fav"))
             }
 
             is Intent.OnDeleteBoard -> viewModelScope.launch {

@@ -68,6 +68,16 @@ fun BoardsListScreen(
                         viewModel.onIntent(BoardsListContract.Intent.OnUndoDeleteBoard)
                     }
                 }
+                is BoardsListContract.Effect.ShowAddedSnackbar -> scope.launch {
+                    val result = snackbarHostState.showSnackbar(
+                        message = effect.message,
+                        withDismissAction = true,
+                        duration = SnackbarDuration.Short
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        viewModel.onIntent(BoardsListContract.Intent.OnUndoDeleteBoard)
+                    }
+                }
                 is BoardsListContract.Effect.ShowMessage -> scope.launch {
                     snackbarHostState.showSnackbar(
                         message = effect.message,
