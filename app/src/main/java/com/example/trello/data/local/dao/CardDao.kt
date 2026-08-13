@@ -14,9 +14,9 @@ interface CardDao {
     @Query("SELECT * FROM cards WHERE listId = :listId ORDER BY position ASC")
     fun getCardsForList(listId: Long): Flow<List<CardEntity>>
 
-    // Flow<CardEntity?> so the detail screen reactively reflects any update
     @Query("SELECT * FROM cards WHERE id = :cardId")
     fun getCardById(cardId: Long): Flow<CardEntity?>
+
     @Insert
     suspend fun insertCard(card: CardEntity): Long
 
@@ -28,4 +28,7 @@ interface CardDao {
 
     @Query("SELECT MAX(position) FROM cards WHERE listId = :listId")
     suspend fun getMaxPosition(listId: Long): Double?
+
+    @Query("UPDATE cards SET isCompleted = :completed WHERE id = :cardId")
+    suspend fun setCompleted(cardId: Long, completed: Boolean)
 }
