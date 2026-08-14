@@ -111,7 +111,9 @@ fun FavoritesScreen(
                             board = board,
                             onClick = { viewModel.onIntent(FavoritesContract.Intent.OnBoardClicked(board.id)) },
                             onToggleFavorite = { viewModel.onIntent(FavoritesContract.Intent.OnToggleFavorite(board)) },
-                            onDelete = { viewModel.onIntent(FavoritesContract.Intent.OnDeleteBoard(board)) }
+                            onEdit = {},
+                            onDelete = { viewModel.onIntent(FavoritesContract.Intent.OnToggleFavorite(board)) },
+                            requireDeleteConfirmation = false
                         )
                     }
                 }

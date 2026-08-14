@@ -13,6 +13,8 @@ object CardDetailContract {
         val priority: Priority = Priority.NONE,
         val dueDate: Long? = null,
         val isCompleted: Boolean = false,
+        val labels: List<String> = emptyList(),
+        val coverColor: String? = null,
         val showDeleteDialog: Boolean = false,
         val showDatePicker: Boolean = false,
         val isDirty: Boolean = false
@@ -29,6 +31,8 @@ object CardDetailContract {
         data object OnDismissDatePicker : Intent
         data object OnClearDueDate : Intent
         data object OnToggleCompleted : Intent
+        data class OnToggleLabel(val colorHex: String) : Intent
+        data class OnCoverColorSelected(val colorHex: String?) : Intent
         data object OnSaveClicked : Intent
         data object OnDeleteClicked : Intent
         data object OnDismissDeleteDialog : Intent

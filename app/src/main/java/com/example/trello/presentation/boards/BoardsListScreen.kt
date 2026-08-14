@@ -136,6 +136,7 @@ fun BoardsListScreen(
                             board = board,
                             onClick = { viewModel.onIntent(BoardsListContract.Intent.OnBoardClicked(board.id)) },
                             onToggleFavorite = { viewModel.onIntent(BoardsListContract.Intent.OnToggleFavorite(board)) },
+                            onEdit = { viewModel.onIntent(BoardsListContract.Intent.OnEditBoardClicked(board)) },
                             onDelete = { viewModel.onIntent(BoardsListContract.Intent.OnDeleteBoard(board)) }
                         )
                     }
@@ -145,10 +146,18 @@ fun BoardsListScreen(
     }
 
     if (state.showCreateDialog) {
+        val board = state.boardToEdit
         BoardEditorDialog(
+            initialTitle = board?.title ?: "",
+            initialDescription = board?.description ?: "",
+            initialColorHex = board?.colorHex ?: com.example.trello.presentation.theme.BoardColorPalette.first(),
             onDismiss = { viewModel.onIntent(BoardsListContract.Intent.OnDismissCreateDialog) },
             onConfirm = { title, description, colorHex ->
-                viewModel.onIntent(BoardsListContract.Intent.OnCreateBoardConfirmed(title, description, colorHex))
+                if (board != null) {
+                    viewModel.onIntent(BoardsListContract.Intent.OnEditBoardConfirmed(title, description, colorHex))
+                } else {
+                    viewModel.onIntent(BoardsListContract.Intent.OnCreateBoardConfirmed(title, description, colorHex))
+                }
             }
         )
     }

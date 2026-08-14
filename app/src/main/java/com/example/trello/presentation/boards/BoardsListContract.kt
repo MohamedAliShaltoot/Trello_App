@@ -8,7 +8,8 @@ object BoardsListContract {
         val boards: List<Board> = emptyList(),
         val searchQuery: String = "",
         val isLoading: Boolean = true,
-        val showCreateDialog: Boolean = false
+        val showCreateDialog: Boolean = false,
+        val boardToEdit: Board? = null
     ) {
         val isEmpty: Boolean get() = !isLoading && boards.isEmpty()
     }
@@ -18,6 +19,12 @@ object BoardsListContract {
         data object OnCreateBoardClicked : Intent
         data object OnDismissCreateDialog : Intent
         data class OnCreateBoardConfirmed(
+            val title: String,
+            val description: String,
+            val colorHex: String
+        ) : Intent
+        data class OnEditBoardClicked(val board: Board) : Intent
+        data class OnEditBoardConfirmed(
             val title: String,
             val description: String,
             val colorHex: String

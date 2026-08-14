@@ -16,7 +16,8 @@ object BoardContract {
         val priorityFilter: Priority? = null,
         val showAddListDialog: Boolean = false,
         val addCardForListId: Long? = null,
-        val moveCardTarget: Card? = null
+        val moveCardTarget: Card? = null,
+        val listToRename: BoardList? = null
     ) {
         val visibleLists: List<BoardList>
             get() = lists.map { list ->
@@ -35,6 +36,12 @@ object BoardContract {
         data object OnAddListClicked : Intent
         data object OnDismissAddListDialog : Intent
         data class OnAddListConfirmed(val title: String) : Intent
+        data class OnRenameListClicked(val list: BoardList) : Intent
+        data object OnDismissRenameListDialog : Intent
+        data class OnRenameListConfirmed(val title: String) : Intent
+        
+        data class OnMoveList(val list: BoardList, val targetListId: Long, val isLeftHalf: Boolean) : Intent
+
         data class OnDeleteList(val list: BoardList) : Intent
         data object OnUndoDeleteList : Intent
 
@@ -48,7 +55,12 @@ object BoardContract {
 
         data class OnMoveCardClicked(val card: Card) : Intent
         data object OnDismissMoveCardDialog : Intent
-        data class OnMoveCardConfirmed(val card: Card, val targetListId: Long) : Intent
+        data class OnMoveCardConfirmed(
+            val card: Card, 
+            val targetListId: Long,
+            val targetCardId: Long? = null,
+            val isTopHalf: Boolean = false
+        ) : Intent
     }
 
     sealed interface Effect {

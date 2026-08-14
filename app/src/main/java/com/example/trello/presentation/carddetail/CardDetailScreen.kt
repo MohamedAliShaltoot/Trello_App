@@ -145,6 +145,24 @@ fun CardDetailScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            Text("Labels", style = MaterialTheme.typography.labelMedium)
+            Spacer(modifier = Modifier.height(6.dp))
+            com.example.trello.presentation.common.components.LabelSelector(
+                selectedLabels = state.labels,
+                onToggleLabel = { viewModel.onIntent(CardDetailContract.Intent.OnToggleLabel(it)) }
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text("Cover", style = MaterialTheme.typography.labelMedium)
+            Spacer(modifier = Modifier.height(6.dp))
+            com.example.trello.presentation.common.components.CoverColorSelector(
+                selectedColor = state.coverColor,
+                onSelectColor = { viewModel.onIntent(CardDetailContract.Intent.OnCoverColorSelected(it)) }
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
             Text("Due date", style = MaterialTheme.typography.labelMedium)
             Spacer(modifier = Modifier.height(6.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
