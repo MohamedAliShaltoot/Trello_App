@@ -82,9 +82,9 @@ A centralized view for browsing and managing boards.
 
 A detailed card experience containing metadata such as labels, priority, due dates, and completion state.
 
-| Board View                                                                          | My Boards                                                                                                                               | Card Details                                                                             |
-|-------------------------------------------------------------------------------------| --------------------------------------------------------------------------------------------------------------------------------------- |------------------------------------------------------------------------------------------|
-| <img width="720" height="1600" alt="Board View" src="docs/images/boardview.jpeg" /> | <img width="720" height="1600" alt="My Boards" src="docs/images/my-boards.jpeg" /> | <img width="720" height="1600" alt="Card Details" src="docs/images/card-details.jpeg" /> |
+| Board View                                                                           | My Boards                                                                                                                               | Card Details                                                                             |
+|--------------------------------------------------------------------------------------| --------------------------------------------------------------------------------------------------------------------------------------- |------------------------------------------------------------------------------------------|
+| <img width="720" height="1600" alt="Board View" src="docs/images/board-view.jpeg" /> | <img width="720" height="1600" alt="My Boards" src="docs/images/my-boards.jpeg" /> | <img width="720" height="1600" alt="Card Details" src="docs/images/card-details.jpeg" /> |
 
 ---
 
