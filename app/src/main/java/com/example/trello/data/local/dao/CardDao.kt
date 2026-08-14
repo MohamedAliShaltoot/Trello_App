@@ -14,6 +14,9 @@ interface CardDao {
     @Query("SELECT * FROM cards WHERE listId = :listId ORDER BY position ASC")
     fun getCardsForList(listId: Long): Flow<List<CardEntity>>
 
+    @Query("SELECT * FROM cards WHERE listId = :listId ORDER BY position ASC")
+    suspend fun getCardsForListSync(listId: Long): List<CardEntity>
+
     @Query("SELECT * FROM cards WHERE id = :cardId")
     fun getCardById(cardId: Long): Flow<CardEntity?>
 

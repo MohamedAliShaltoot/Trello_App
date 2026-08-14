@@ -13,6 +13,8 @@ fun CardEntity.toDomain(): Card = Card(
     priority = Priority.fromNameOrDefault(priority),
     dueDate = dueDate,
     isCompleted = isCompleted,
+    labels = if (labels.isBlank()) emptyList() else labels.split(","),
+    coverColor = coverColor,
     createdAt = createdAt
 )
 
@@ -25,5 +27,7 @@ fun Card.toEntity(): CardEntity = CardEntity(
     priority = priority.name,
     dueDate = dueDate,
     isCompleted = isCompleted,
+    labels = labels.joinToString(","),
+    coverColor = coverColor,
     createdAt = createdAt
 )

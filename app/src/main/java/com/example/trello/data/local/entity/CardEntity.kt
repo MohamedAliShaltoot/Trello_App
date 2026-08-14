@@ -27,5 +27,7 @@ data class CardEntity(
     val priority: String = "NONE",
     val dueDate: Long? = null,
     val isCompleted: Boolean = false,
+    val labels: String = "",
+    val coverColor: String? = null,
     val createdAt: Long = System.currentTimeMillis()
 )

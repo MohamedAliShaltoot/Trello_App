@@ -11,7 +11,7 @@ import com.example.trello.data.local.entity.CardListEntity
 
 @Database(
     entities = [BoardEntity::class, CardListEntity::class, CardEntity::class],
-    version = 2,
+    version = 4,
     exportSchema = false
 )
 abstract class TrelloDatabase : RoomDatabase() {
