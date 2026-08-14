@@ -17,9 +17,9 @@ A fully-featured, highly-polished Trello-inspired task management application bu
 
 ## 📸 Screenshots
 
-| My Boards | Board View | Card Details |
-| --- | --- | --- |
-| <img src="https://github.com/user-attachments/assets/54144146-27f4-47c2-a4a7-38cd4fb9fbb2" width="250"/> | <img src="https://github.com/user-attachments/assets/14b57ef3-b2ae-44cf-9c2d-77f31f57e68d" width="250"/> | <img src="https://github.com/user-attachments/assets/8eafe3f9-38ec-4d84-997b-1885c32f0fa2" width="250"/> |
+| My Boards                                           | Board View                                           | Card Details                                           |
+|-----------------------------------------------------|------------------------------------------------------|--------------------------------------------------------|
+| <img src="docs/images/my-boards.jpeg" width="250"/> | <img src="docs/images/board-view.jpeg" width="250"/> | <img src="docs/images/card-details.jpeg" width="250"/> |
 *(Note: Screenshots represent an earlier iteration and may not reflect the latest UI overhauls including custom board backgrounds, label chips, and card covers)*
 
 ## 🛠 Tech Stack
