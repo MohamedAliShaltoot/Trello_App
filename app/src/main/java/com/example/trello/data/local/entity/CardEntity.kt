@@ -22,7 +22,12 @@ data class CardEntity(
     val id: Long = 0,
     val listId: Long,
     val title: String,
-    val description: String? = null,
+    val description: String = "",
     val position: Double,
+    val priority: String = "NONE",
+    val dueDate: Long? = null,
+    val isCompleted: Boolean = false,
+    val labels: String = "",
+    val coverColor: String? = null,
     val createdAt: Long = System.currentTimeMillis()
 )
