@@ -82,9 +82,9 @@ A centralized view for browsing and managing boards.
 
 A detailed card experience containing metadata such as labels, priority, due dates, and completion state.
 
-| Board View                                                                                                                               | My Boards                                                                                                                               | Card Details                                                                                                                               |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| <img width="720" height="1600" alt="Board View" src="https://github.com/user-attachments/assets/eed77193-07d6-468b-92f8-bd1bd19cb922" /> | <img width="720" height="1600" alt="My Boards" src="https://github.com/user-attachments/assets/015d352d-7fb5-4cb4-b8b0-a66504fa77a2" /> | <img width="720" height="1600" alt="Card Details" src="https://github.com/user-attachments/assets/027dbebf-c78f-4eb0-8a61-95d5ba92fb1f" /> |
+| Board View                                                                           | My Boards                                                                                                                               | Card Details                                                                             |
+|--------------------------------------------------------------------------------------| --------------------------------------------------------------------------------------------------------------------------------------- |------------------------------------------------------------------------------------------|
+| <img width="720" height="1600" alt="Board View" src="docs/images/board-view.jpeg" /> | <img width="720" height="1600" alt="My Boards" src="docs/images/my-boards.jpeg" /> | <img width="720" height="1600" alt="Card Details" src="docs/images/card-details.jpeg" /> |
 
 ---
 
