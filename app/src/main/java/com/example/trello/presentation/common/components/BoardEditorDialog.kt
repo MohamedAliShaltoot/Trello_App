@@ -61,6 +61,7 @@ fun BoardEditorDialog(
     var description by remember { mutableStateOf(initialDescription) }
     var colorHex by remember { mutableStateOf(initialColorHex) }
     val accentColor = remember(colorHex) { colorHex.toComposeColor() }
+    val isEditMode = initialTitle.isNotBlank()
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -75,7 +76,7 @@ fun BoardEditorDialog(
                         .background(accentColor, CircleShape)
                 )
                 Text(
-                    text = "New board",
+                    text = if (isEditMode) "Edit board" else "New board",
                     modifier = Modifier.padding(start = 10.dp),
                     style = MaterialTheme.typography.titleLarge
                 )
@@ -139,7 +140,7 @@ fun BoardEditorDialog(
                 colors = ButtonDefaults.buttonColors(containerColor = accentColor),
                 modifier = Modifier.padding(bottom = 4.dp, end = 4.dp)
             ) {
-                Text("Create", color = Color.White)
+                Text(if (isEditMode) "Save" else "Create", color = Color.White)
             }
         },
         dismissButton = {
