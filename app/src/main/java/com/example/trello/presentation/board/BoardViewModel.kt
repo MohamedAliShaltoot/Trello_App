@@ -35,6 +35,7 @@ class BoardViewModel @Inject constructor(
     private val showAddListDialog = MutableStateFlow(false)
     private val addCardForListId = MutableStateFlow<Long?>(null)
     private val moveCardTarget = MutableStateFlow<Card?>(null)
+    private val listToRename = MutableStateFlow<BoardList?>(null)
 
 
     private data class UiFlags(
@@ -42,13 +43,16 @@ class BoardViewModel @Inject constructor(
         val priority: Priority?,
         val showAddListDialog: Boolean,
         val addCardForListId: Long?,
-        val moveCardTarget: Card?
+        val moveCardTarget: Card?,
+        val listToRename: BoardList?
     )
 
     private val uiFlags = combine(
         searchQuery, priorityFilter, showAddListDialog, addCardForListId, moveCardTarget
     ) { query, priority, showDialog, addCardListId, moveTarget ->
-        UiFlags(query, priority, showDialog, addCardListId, moveTarget)
+        UiFlags(query, priority, showDialog, addCardListId, moveTarget, null)
+    }.combine(listToRename) { flags, listRename ->
+        flags.copy(listToRename = listRename)
     }
 
     val state: StateFlow<State> = combine(
@@ -64,7 +68,8 @@ class BoardViewModel @Inject constructor(
             priorityFilter = flags.priority,
             showAddListDialog = flags.showAddListDialog,
             addCardForListId = flags.addCardForListId,
-            moveCardTarget = flags.moveCardTarget
+            moveCardTarget = flags.moveCardTarget,
+            listToRename = flags.listToRename
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), State())
 
@@ -85,6 +90,17 @@ class BoardViewModel @Inject constructor(
                 if (intent.title.isBlank()) return
                 showAddListDialog.value = false
                 viewModelScope.launch { repository.createList(boardId, intent.title) }
+            }
+
+            is Intent.OnRenameListClicked -> listToRename.value = intent.list
+            
+            Intent.OnDismissRenameListDialog -> listToRename.value = null
+            
+            is Intent.OnRenameListConfirmed -> {
+                val list = listToRename.value ?: return
+                if (intent.title.isBlank()) return
+                listToRename.value = null
+                viewModelScope.launch { repository.renameList(list, intent.title) }
             }
 
             is Intent.OnDeleteList -> viewModelScope.launch {
@@ -127,7 +143,13 @@ class BoardViewModel @Inject constructor(
             Intent.OnDismissMoveCardDialog -> moveCardTarget.value = null
             is Intent.OnMoveCardConfirmed -> {
                 moveCardTarget.value = null
-                viewModelScope.launch { repository.moveCard(intent.card, intent.targetListId) }
+                viewModelScope.launch { 
+                    repository.moveCard(intent.card, intent.targetListId, intent.targetCardId, intent.isTopHalf) 
+                }
+            }
+            
+            is Intent.OnMoveList -> viewModelScope.launch {
+                repository.moveList(intent.list, intent.targetListId, intent.isLeftHalf)
             }
         }
     }

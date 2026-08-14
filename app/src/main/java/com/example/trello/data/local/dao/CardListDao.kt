@@ -14,6 +14,9 @@ interface CardListDao {
     @Query("SELECT * FROM lists WHERE boardId = :boardId ORDER BY position ASC")
     fun getListsForBoard(boardId: Long): Flow<List<CardListEntity>>
 
+    @Query("SELECT * FROM lists WHERE boardId = :boardId ORDER BY position ASC")
+    suspend fun getListsForBoardSync(boardId: Long): List<CardListEntity>
+
     @Insert
     suspend fun insertList(list: CardListEntity): Long
 

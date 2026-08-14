@@ -9,6 +9,8 @@ data class Card(
     val priority: Priority = Priority.NONE,
     val dueDate: Long? = null,
     val isCompleted: Boolean = false,
+    val labels: List<String> = emptyList(),
+    val coverColor: String? = null,
     val createdAt: Long = System.currentTimeMillis()
 ) {
     val isOverdue: Boolean

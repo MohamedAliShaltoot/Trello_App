@@ -50,7 +50,9 @@ class CardDetailViewModel @Inject constructor(
                             description = card.description,
                             priority = card.priority,
                             dueDate = card.dueDate,
-                            isCompleted = card.isCompleted
+                            isCompleted = card.isCompleted,
+                            labels = card.labels,
+                            coverColor = card.coverColor
                         )
                     } else {
                         current.copy(
@@ -96,6 +98,22 @@ class CardDetailViewModel @Inject constructor(
                 viewModelScope.launch { repository.setCardCompleted(current.id, !current.isCompleted) }
             }
 
+            is Intent.OnToggleLabel -> {
+                val currentLabels = _state.value.labels.toMutableList()
+                if (currentLabels.contains(intent.colorHex)) {
+                    currentLabels.remove(intent.colorHex)
+                } else {
+                    currentLabels.add(intent.colorHex)
+                }
+                _state.update { it.copy(labels = currentLabels) }
+                persistPatch { it.copy(labels = currentLabels) }
+            }
+
+            is Intent.OnCoverColorSelected -> {
+                _state.update { it.copy(coverColor = intent.colorHex) }
+                persistPatch { it.copy(coverColor = intent.colorHex) }
+            }
+
             Intent.OnSaveClicked -> {
                 val snapshot = _state.value
                 val current = snapshot.card ?: return
@@ -106,7 +124,9 @@ class CardDetailViewModel @Inject constructor(
                             title = snapshot.title.trim(),
                             description = snapshot.description.trim(),
                             priority = snapshot.priority,
-                            dueDate = snapshot.dueDate
+                            dueDate = snapshot.dueDate,
+                            labels = snapshot.labels,
+                            coverColor = snapshot.coverColor
                         )
                     )
                     _effect.send(Effect.NavigateBack)

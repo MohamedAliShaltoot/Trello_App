@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Favorite
@@ -36,7 +37,9 @@ fun BoardListItem(
     board: Board,
     onClick: () -> Unit,
     onToggleFavorite: () -> Unit,
+    onEdit: () -> Unit,
     onDelete: () -> Unit,
+    requireDeleteConfirmation: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     var showDeleteConfirm by remember { mutableStateOf(false) }
@@ -63,10 +66,23 @@ fun BoardListItem(
                         tint = if (board.isFavorite) accentColor else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                IconButton(onClick = { showDeleteConfirm = true }) {
+                IconButton(onClick = onEdit) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit board",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                IconButton(onClick = { 
+                    if (requireDeleteConfirmation) {
+                        showDeleteConfirm = true 
+                    } else {
+                        onDelete()
+                    }
+                }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete board",
+                        contentDescription = "Delete",
                         tint = Color.Red
                     )
                 }

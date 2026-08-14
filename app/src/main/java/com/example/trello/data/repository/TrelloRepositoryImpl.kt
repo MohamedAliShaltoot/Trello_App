@@ -82,12 +82,39 @@ class TrelloRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun updateList(list: BoardList) = withContext(ioDispatcher) {
+        listDao.updateList(list.toEntity())
+    }
+
+    override suspend fun renameList(list: BoardList, title: String) = withContext(ioDispatcher) {
+        listDao.updateList(list.copy(title = title).toEntity())
+    }
+
     override suspend fun deleteList(list: BoardList) = withContext(ioDispatcher) {
         listDao.deleteList(list.toEntity())
     }
 
     override suspend fun restoreList(list: BoardList): Long = withContext(ioDispatcher) {
         listDao.insertList(list.toEntity().copy(id = 0))
+    }
+
+    override suspend fun moveList(list: BoardList, targetListId: Long, isLeftHalf: Boolean) = withContext(ioDispatcher) {
+        val lists = listDao.getListsForBoardSync(list.boardId).filter { it.id != list.id }
+        val targetIndex = lists.indexOfFirst { it.id == targetListId }
+
+        val newPosition = if (targetIndex != -1) {
+            if (isLeftHalf) {
+                val prevPos = if (targetIndex > 0) lists[targetIndex - 1].position else lists[targetIndex].position - 1.0
+                (prevPos + lists[targetIndex].position) / 2.0
+            } else {
+                val nextPos = if (targetIndex < lists.lastIndex) lists[targetIndex + 1].position else lists[targetIndex].position + 1.0
+                (lists[targetIndex].position + nextPos) / 2.0
+            }
+        } else {
+            (listDao.getMaxPosition(list.boardId) ?: 0.0) + 1.0
+        }
+        
+        listDao.updateList(list.copy(position = newPosition).toEntity())
     }
 
     // Cards
@@ -115,8 +142,27 @@ class TrelloRepositoryImpl @Inject constructor(
     override suspend fun setCardCompleted(cardId: Long, completed: Boolean) =
         withContext(ioDispatcher) { cardDao.setCompleted(cardId, completed) }
 
-    override suspend fun moveCard(card: Card, targetListId: Long) = withContext(ioDispatcher) {
-        val nextPosition = (cardDao.getMaxPosition(targetListId) ?: 0.0) + 1.0
-        cardDao.updateCard(card.copy(listId = targetListId, position = nextPosition).toEntity())
+    override suspend fun moveCard(card: Card, targetListId: Long, targetCardId: Long?, isTopHalf: Boolean) = withContext(ioDispatcher) {
+        if (targetCardId == null) {
+            val nextPosition = (cardDao.getMaxPosition(targetListId) ?: 0.0) + 1.0
+            cardDao.updateCard(card.copy(listId = targetListId, position = nextPosition).toEntity())
+        } else {
+            // Reordering cards within a list or dropping between cards
+            val cards = cardDao.getCardsForListSync(targetListId).filter { it.id != card.id } // exclude self
+            val targetIndex = cards.indexOfFirst { it.id == targetCardId }
+            
+            val newPosition = if (targetIndex != -1) {
+                if (isTopHalf) {
+                    val prevPos = if (targetIndex > 0) cards[targetIndex - 1].position else cards[targetIndex].position - 1.0
+                    (prevPos + cards[targetIndex].position) / 2.0
+                } else {
+                    val nextPos = if (targetIndex < cards.lastIndex) cards[targetIndex + 1].position else cards[targetIndex].position + 1.0
+                    (cards[targetIndex].position + nextPos) / 2.0
+                }
+            } else {
+                (cardDao.getMaxPosition(targetListId) ?: 0.0) + 1.0
+            }
+            cardDao.updateCard(card.copy(listId = targetListId, position = newPosition).toEntity())
+        }
     }
 }

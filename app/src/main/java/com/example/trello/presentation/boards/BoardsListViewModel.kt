@@ -35,14 +35,17 @@ class BoardsListViewModel @Inject constructor(
         .distinctUntilChanged()
         .flatMapLatest { query -> repository.observeBoards(query) }
 
+    private val boardToEdit = MutableStateFlow<Board?>(null)
+
     val state: StateFlow<State> = combine(
-        boards, searchQuery, showCreateDialog
-    ) { boardList, query, showDialog ->
+        boards, searchQuery, showCreateDialog, boardToEdit
+    ) { boardList, query, showDialog, editBoard ->
         State(
             boards = boardList,
             searchQuery = query,
             isLoading = false,
-            showCreateDialog = showDialog
+            showCreateDialog = showDialog,
+            boardToEdit = editBoard
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), State())
 
@@ -57,7 +60,10 @@ class BoardsListViewModel @Inject constructor(
 
             Intent.OnCreateBoardClicked -> showCreateDialog.value = true
 
-            Intent.OnDismissCreateDialog -> showCreateDialog.value = false
+            Intent.OnDismissCreateDialog -> {
+                showCreateDialog.value = false
+                boardToEdit.value = null
+            }
 
             is Intent.OnCreateBoardConfirmed -> {
                 if (intent.title.isBlank()) return
@@ -67,6 +73,27 @@ class BoardsListViewModel @Inject constructor(
                         title = intent.title,
                         description = intent.description,
                         colorHex = intent.colorHex
+                    )
+                }
+            }
+
+            is Intent.OnEditBoardClicked -> {
+                boardToEdit.value = intent.board
+                showCreateDialog.value = true
+            }
+
+            is Intent.OnEditBoardConfirmed -> {
+                val current = boardToEdit.value ?: return
+                if (intent.title.isBlank()) return
+                showCreateDialog.value = false
+                boardToEdit.value = null
+                viewModelScope.launch {
+                    repository.updateBoard(
+                        current.copy(
+                            title = intent.title,
+                            description = intent.description,
+                            colorHex = intent.colorHex
+                        )
                     )
                 }
             }

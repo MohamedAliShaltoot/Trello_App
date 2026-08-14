@@ -20,8 +20,11 @@ interface TrelloRepository {
     // Lists
     fun observeLists(boardId: Long): Flow<List<BoardList>>
     suspend fun createList(boardId: Long, title: String): Long
+    suspend fun updateList(list: BoardList)
+    suspend fun renameList(list: BoardList, title: String)
     suspend fun deleteList(list: BoardList)
     suspend fun restoreList(list: BoardList): Long
+    suspend fun moveList(list: BoardList, targetListId: Long, isLeftHalf: Boolean)
 
     // Cards
     fun observeCard(cardId: Long): Flow<Card?>
@@ -30,5 +33,5 @@ interface TrelloRepository {
     suspend fun deleteCard(card: Card)
     suspend fun restoreCard(card: Card): Long
     suspend fun setCardCompleted(cardId: Long, completed: Boolean)
-    suspend fun moveCard(card: Card, targetListId: Long)
+    suspend fun moveCard(card: Card, targetListId: Long, targetCardId: Long? = null, isTopHalf: Boolean = false)
 }
