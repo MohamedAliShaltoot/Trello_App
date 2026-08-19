@@ -1,7 +1,9 @@
 package com.example.trello.di
 
 
+import com.example.trello.data.repository.AiRepositoryImpl
 import com.example.trello.data.repository.TrelloRepositoryImpl
+import com.example.trello.domain.repository.AiRepository
 import com.example.trello.domain.repository.TrelloRepository
 import dagger.Binds
 import dagger.Module
@@ -17,4 +19,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindTrelloRepository(impl: TrelloRepositoryImpl): TrelloRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAiRepository(impl: AiRepositoryImpl): AiRepository
 }
