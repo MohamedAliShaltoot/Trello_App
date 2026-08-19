@@ -40,6 +40,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.trello.presentation.common.components.BoardEditorDialog
 import com.example.trello.presentation.common.components.BoardListItem
 import com.example.trello.presentation.navigation.SharedColor
+import com.example.trello.presentation.ai.AiAssistantDialog
+import com.example.trello.presentation.ai.AiAssistantViewModel
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -47,11 +53,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun BoardsListScreen(
     onBoardClick: (Long) -> Unit,
-    viewModel: BoardsListViewModel = hiltViewModel()
+    viewModel: BoardsListViewModel = hiltViewModel(),
+    aiViewModel: AiAssistantViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    var showAiDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -90,7 +98,16 @@ fun BoardsListScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = { TopAppBar(title = { Text("Your Boards") }) },
+        topBar = { 
+            TopAppBar(
+                title = { Text("Your Boards") },
+                actions = {
+                    IconButton(onClick = { showAiDialog = true }) {
+                        Icon(Icons.Default.AutoAwesome, contentDescription = "AI Assistant", tint = MaterialTheme.colorScheme.primary)
+                    }
+                }
+            ) 
+        },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 containerColor = SharedColor.sharedColor,
@@ -158,6 +175,20 @@ fun BoardsListScreen(
                 } else {
                     viewModel.onIntent(BoardsListContract.Intent.OnCreateBoardConfirmed(title, description, colorHex))
                 }
+            }
+        )
+    }
+
+    if (showAiDialog) {
+        val aiState by aiViewModel.uiState.collectAsState()
+        AiAssistantDialog(
+            uiState = aiState,
+            onDismissRequest = {
+                showAiDialog = false
+                aiViewModel.reset()
+            },
+            onSendMessage = { prompt ->
+                aiViewModel.sendMessage(prompt)
             }
         )
     }

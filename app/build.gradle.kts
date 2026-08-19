@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -26,6 +27,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -58,4 +60,7 @@ dependencies {
 
     // icons
     implementation("androidx.compose.material:material-icons-extended")
+
+    // Google AI SDK
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 }
