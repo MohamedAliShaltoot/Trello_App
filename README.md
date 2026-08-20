@@ -1,4 +1,4 @@
-# Trello-Inspired Task Manager
+# Mersam Task Manager
 
 A polished Android task-management application inspired by modern Kanban workflows, built with **Kotlin** and **Jetpack Compose**.
 
